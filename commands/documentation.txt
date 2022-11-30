@@ -1,0 +1,12 @@
+Clone the repository.
+ssh_into file should be in /usr/local/bin
+
+Inside ~/Robotex/commands run 
+
+./installer
+
+If the command does not work, run:
+
+chmod u+x installer
+
+PS: You do not need to install these executables. These are just to ease the process of connecting to car. The IP of car will be included later.

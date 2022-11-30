@@ -1,0 +1,4 @@
+if [[ $1 == "-r" ]] ; then
+	rm installer
+fi
+cp ssh_into /usr/local/bin && cd .. && cd .. && cd /usr/local/bin && chmod u+x ssh_into 

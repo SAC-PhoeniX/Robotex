@@ -1,7 +1,0 @@
-Clone the repository.
-ssh_into file should be in /usr/local/bin
-
-Inside ~/Robotex/commands run 
-
-cp ssh_into /usr/local/bin
-
