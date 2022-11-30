@@ -1,0 +1,6 @@
+if [[ ! -z $1 ]] ; then
+	echo "SSH $1"
+        ping -c 1 '$1' | grep -q "100% packet loss" && echo "Packet loss" || ssh sacracer@$1
+else
+	echo "No IP given in arguments. Please give an IP and try again."
+fi
