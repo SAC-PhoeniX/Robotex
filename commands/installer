@@ -1,4 +1,12 @@
 if [[ $1 == "-r" ]] ; then
 	rm installer
 fi
+cd ~ && cd .. && cd .. && cd /usr/local/bin && rm ssh_into && rm Robotex
+
+cd ~ && cd Desktop && cd Robotex && cd commands
 cp ssh_into /usr/local/bin && cd .. && cd .. && cd /usr/local/bin && chmod u+x ssh_into 
+
+cd ~ && cd Desktop && cd Robotex && cd commands
+cp Robotex /usr/local/bin && cd .. && cd .. && cd /usr/local/bin && chmod u+x Robotex
+
+echo "Installation complete. You can now use ssh_into and Robotex commands."

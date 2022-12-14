@@ -1,0 +1,12 @@
+if [[ $1 == "run" ]] ; then
+    echo "Running Robotex"
+    #Without changing dir name, this will not work. This should be tested in Raspberry Pi.
+    cd ~/Desktop/Robotex/src
+    python3 main.py
+    exit 0
+fi
+
+if [[ -z $1 ]] ; then
+    echo "No arguments given. Please give an argument and try again."
+    exit 0
+fi
