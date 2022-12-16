@@ -1,4 +1,5 @@
 import RPi.GPIO as gpio
+import time
 
 
 class Drive:
@@ -37,8 +38,13 @@ class Drive:
         """
         self.gpio.PWM(self.steer_pin, angle)
 
-    def update(self, speed: int, angle: int) -> None:
+    def update(self, speed: int, angle: int, update_interval: int) -> None:
         """Update the drive system.\n
         CONTINUE HERE AND CREATE A LOG FILE FOR THE DRIVE SYSTEM.\n
         CREATE ANOTHER LOG FILE FOR THE SENSOR SYSTEM.\n    
         """
+        with open("LOG.log", "a") as log:
+            log.write(f"{time.time()} | {speed} | {angle}")
+
+        self.drive(speed)
+        self.steer(angle)
