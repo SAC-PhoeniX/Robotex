@@ -30,17 +30,19 @@ class Drive:
         """Drive the car.\n
         speed: speed of the car. Range from 0 to 100.\n
         """
-        self.gpio.PWM(self.drive_pin, speed*(speed <= 100 and speed >= 0) + 0*(speed > 100 and speed < 0))
+        self.gpio.PWM(self.drive_pin, speed*(speed <=
+                      100 and speed >= 0) + 0*(speed > 100 and speed < 0))
 
     def steer(self, angle: int) -> None:
         """Steer the car.\n
         angle: angle of the steering wheel. Range from 0 to 100.\n
         """
-        self.gpio.PWM(self.steer_pin, angle*(angle <= 100 and angle >= 0) + 0*(angle > 100 and angle < 0))
+        self.gpio.PWM(self.steer_pin, angle*(angle <=
+                      100 and angle >= 0) + 0*(angle > 100 and angle < 0))
 
     def update(self, speed: int, angle: int) -> None:
         """Update the drive system.\n
-        CREATE ANOTHER LOG FILE FOR THE SENSOR SYSTEM.\n    
+        CREATE ANOTHER LOG FILE FOR THE SENSOR SYSTEM.\n
         """
         with open("LOG.log", "a") as log:
             log.write(f"{time.time()} | {speed} | {angle}")
