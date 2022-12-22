@@ -3,7 +3,7 @@ import time
 
 
 class Drive:
-    def __init__(self, pins: list, stop_pin: int, drive_pin: int, steer_pin: int) -> None:
+    def __init__(self, pins: list, stop_pin: int, drive_pin: int, steer_pin: int, trig_pin: int) -> None:
         """Main Drive class. This class is used to control the car's drive system.\n
         pins: list of pins used for the sensors.\n
         stop_pin: pin used for the stop button.\n
@@ -16,8 +16,9 @@ class Drive:
         self.stop_pin = stop_pin
         self.drive_pin = drive_pin
         self.steer_pin = steer_pin
+        self.trig_pin = trig_pin
 
-        self.gpio.setmode(self.gpio.Board)
+        self.gpio.setmode(self.gpio.BOARD)
 
         for pin in self.sensor_pins:
             self.gpio.setup(pin, self.gpio.IN)
@@ -39,6 +40,14 @@ class Drive:
         """
         self.gpio.PWM(self.steer_pin, angle*(angle <=
                       100 and angle >= 0) + 0*(angle > 100 and angle < 0))
+
+    def sensor(self):
+        """Reads sensor values and returns them in the given order."""
+        values = []
+        for pin in self.sensor_pins:
+            values.append(self.gpio.input(pin))
+
+        return values
 
     def update(self, speed: int, angle: int) -> None:
         """Update the drive system.\n
