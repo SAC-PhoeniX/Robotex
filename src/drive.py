@@ -1,11 +1,12 @@
 import RPi.GPIO as gpio
 import time
+from hrc04 import Sensor
 
 
 class Drive:
-    def __init__(self, pins: list, stop_pin: int, drive_pin: int, steer_pin: int) -> None:
+    def __init__(self, pins: list, stop_pin: int, drive_pin: int, steer_pin: int, trig_pin: int) -> None:
         """Main Drive class. This class is used to control the car's drive system.\n
-        pins: list of pins used for the sensors.\n
+        pins: list of pins used for the sensors. Needs three pins. self.sensor.distance function gets the measurements of the sensors. \n
         stop_pin: pin used for the stop button.\n
         drive_pin: pin used for the drive motor.\n
         steer_pin: pin used for the steering motor.\n
@@ -16,8 +17,9 @@ class Drive:
         self.stop_pin = stop_pin
         self.drive_pin = drive_pin
         self.steer_pin = steer_pin
-
-        self.gpio.setmode(self.gpio.Board)
+        self.trig_pin = trig_pin
+        self.gpio.setmode(self.gpio.BOARD)
+        self.sensor=Sensor(*self.sensor_pins, trig_pin)
 
         for pin in self.sensor_pins:
             self.gpio.setup(pin, self.gpio.IN)
