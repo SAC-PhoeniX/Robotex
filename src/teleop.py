@@ -1,5 +1,5 @@
 # import sacrace
-from evdev import InputDevice, ecodes
+from evdev import InputDevice, categorize, ecodes, KeyEvent
 #from drive import Drive
 import glob
 import os
@@ -13,6 +13,8 @@ class Teleop:
         event_dir = "/dev/input/"
         os.chdir("/dev/input")
         # TEST NEEDED
+        self.x=0
+        self.y=0
         for file in sorted(glob.glob("event*")):
             print(file)  # TEST
             event_path = file
@@ -26,52 +28,8 @@ class Teleop:
         return 
 
     def __init__(self,event_path='event3') -> None: #drive: Drive
-        #self.drive = drive
 
-        self.CENTER_TOLERANCE = 350
-        self.STICK_MAX = 65536
-
-        self.axis = {
-            ecodes.ABS_X: 'ls_x',  # 0 - 65,536   the middle is 32768
-            ecodes.ABS_Y: 'ls_y',
-            ecodes.ABS_RX: 'rs_x',
-            ecodes.ABS_RY: 'rs_y',
-            ecodes.ABS_BRAKE: 'lt',  # 0 - 1023
-            ecodes.ABS_GAS: 'rt',
-
-            ecodes.ABS_HAT0X: 'dpad_x',  # -1 - 1
-            ecodes.ABS_HAT0Y: 'dpad_y',
-
-            2: "trigger1",
-            5: "trigger2"
-        }
-
-        self.center = {
-            'ls_x': self.STICK_MAX/2,
-            'ls_y': self.STICK_MAX/2,
-            'rs_x': self.STICK_MAX/2,
-            'rs_y': self.STICK_MAX/2
-        }
-
-        self.last = {
-            'ls_x': self.STICK_MAX/2,
-            'ls_y': self.STICK_MAX/2,
-            'rs_x': self.STICK_MAX/2,
-            'rs_y': self.STICK_MAX/2
-        }
-            
-        self.motorrange = 80
-        self.steerrange = 70
-
-        # TEST NEEDED
         self.events_dir = "/dev/input/"
-
-        if event_path == "":
-            os.chdir("/dev/input")
-            # TEST NEEDED
-            for file in sorted(glob.glob("event*")):
-                print(file)  # TEST
-                event_path = file
 
         self.ConnectDevice()
 
@@ -80,32 +38,38 @@ class Teleop:
 
     
 
-    def UpdateInputs(self,timestried=10): #TODO the inputs sometimes bug out at 0.5. This can cause the car to crash and get damaged like the bug that was faced last time.
+    def UpdateInputs(self,timestried=8):
 
-        try:
-            for i in range(timestried):
-                event=self.device.read_one()
+        for i in range(timestried):
+            event=self.device.read_one()
 
-                if event==None:
-                    continue
+            if event==None:
+                continue
+            
+            if event.type == ecodes.EV_ABS:
+                absevent = categorize(event)
+                if ecodes.bytype[absevent.event.type][absevent.event.code] == 'ABS_RY':
+                    y = absevent.event.value
+                    #y = (y-127)* -1
+                    y /= -2**8
+                    y = int(y)
+                    self.y=y
 
-                if event.type == ecodes.EV_ABS:
-                    print(event.code)
-                    if self.axis[event.code] in ['ls_y', 'rs_x']:
-                        self.last[self.axis[event.code]] = event.value
-                        value = event.value - self.center[self.axis[event.code]]
+                if ecodes.bytype[absevent.event.type][absevent.event.code] == 'ABS_RX':
+                    x = absevent.event.value
+                    #x = (x - 128) * -1
+                    x /= -2**8
+                    x = int(x)
+                    self.x=x
 
-                        if abs(value) <= self.CENTER_TOLERANCE:
-                            value = 0
-
-                        print("angle:" + str(self.last['rs_x']/self.STICK_MAX))
-                        print("speed:" + str(self.last['ls_y']/self.STICK_MAX))
-                        ret={"angle":self.last['rs_x']/self.STICK_MAX,"speed":self.last['ls_y']/self.STICK_MAX}#The speed for the controller does not change and stays the same. The controller probably needs to be changed because this is not caused by a software error. 
-                        self.last_inputs=ret
-                        return ret
-            return {"angle":0,"speed":0} #The speed and the angle needs to be returned zero so the car kn ows when to stop
-        except:
-            self.ConnectDevice()
+                # -10 < y < 10
+                if -10 < y and y < 10:
+                    self.y=y
+                if -10 < x and x < 10:
+                    x = 0#y=0 
+                    self.x=x
+                
+        return {"angle":self.x,"speed":self.y}
 
 
 
@@ -114,4 +78,6 @@ class Teleop:
 
 
 if __name__=="__main__":
-    pass
+    a=Teleop()
+    while True:
+        a.UpdateInputs()

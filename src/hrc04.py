@@ -23,7 +23,7 @@ class Sensor:
         output(self.trigPIN, False)
 
         test1S = time()
-        sleep(0.001)
+        sleep(0.0001)
         retlist=[None for i in range(3)]
         while test1S+max_delay>time():
             for i in range(3):
@@ -33,7 +33,7 @@ class Sensor:
                     retlist[i]=time()-test1S
         if tometers:
 
-            return [165.45*i if i != None else None for i in retlist ]#converts to meter
+            return [17150*i if i != None else None for i in retlist ]#converts to meter
         return retlist
         
 

@@ -7,7 +7,7 @@ from drive import Drive
 
 
 class Teleop:
-    def ConnectDevice(self,device_name="Logitech Logitech Dual Action"):#Logitech Gamepad F310 (old broken)
+    def ConnectDevice(self,device_name="Logitech Gamepad F710"):
         """This function is ment to connect the device to the desired controller 
         and in order to reconnect to the controller if the connection is lost."""
         event_dir = "/dev/input/"
@@ -28,8 +28,8 @@ class Teleop:
     def __init__(self,event_path='event3') -> None: #drive: Drive
         #self.drive = drive
 
-        self.CENTER_TOLERANCE = 0#350
-        self.STICK_MAX = 256#65536
+        self.CENTER_TOLERANCE = 350
+        self.STICK_MAX = 65536
 
         self.axis = {
             ecodes.ABS_X: 'ls_x',  # 0 - 65,536   the middle is 32768
@@ -82,35 +82,30 @@ class Teleop:
 
     def UpdateInputs(self,timestried=10): #TODO the inputs sometimes bug out at 0.5. This can cause the car to crash and get damaged like the bug that was faced last time.
 
-        #try:
-        for i in range(timestried):
-            event=self.device.read_one()
+        try:
+            for i in range(timestried):
+                event=self.device.read_one()
 
-            if event==None:
-                continue
-            #print(event.value)
+                if event==None:
+                    continue
 
-            
-            
-            
-            if event.type == ecodes.EV_ABS:
-                if self.axis[event.code] in ['ls_x', 'ls_y']:
-                    self.last[self.axis[event.code]] = event.value
-                    value = event.value - self.center[self.axis[event.code]]
-                    print(value)
+                if event.type == ecodes.EV_ABS:
+                    print(event.code)
+                    if self.axis[event.code] in ['ls_y', 'rs_x']:
+                        self.last[self.axis[event.code]] = event.value
+                        value = event.value - self.center[self.axis[event.code]]
 
-                    if abs(value) <= self.CENTER_TOLERANCE:
-                        value = 0
+                        if abs(value) <= self.CENTER_TOLERANCE:
+                            value = 0
 
-                    print("angle:" + str(self.last['rs_x']/self.STICK_MAX))
-                    print("speed:" + str(self.last['ls_y']/self.STICK_MAX))
-                    ret={"angle":self.last['rs_x']/self.STICK_MAX,"speed":self.last['ls_y']/self.STICK_MAX}#The speed for the controller does not change and stays the same. The controller probably needs to be changed because this is not caused by a software error. 
-                    self.last_inputs=ret
-                    return ret
-        return #{"angle":0,"speed":0} #The speed and the angle needs to be returned zero so the car kn ows when to stop
-        #except:
-        #    print("reconnecting")
-        #    self.ConnectDevice()
+                        print("angle:" + str(self.last['rs_x']/self.STICK_MAX))
+                        print("speed:" + str(self.last['ls_y']/self.STICK_MAX))
+                        ret={"angle":self.last['rs_x']/self.STICK_MAX,"speed":self.last['ls_y']/self.STICK_MAX}#The speed for the controller does not change and stays the same. The controller probably needs to be changed because this is not caused by a software error. 
+                        self.last_inputs=ret
+                        return ret
+            return {"angle":0,"speed":0} #The speed and the angle needs to be returned zero so the car kn ows when to stop
+        except:
+            self.ConnectDevice()
 
 
 
@@ -121,5 +116,4 @@ class Teleop:
 if __name__=="__main__":
     a=Teleop()
     while True:
-        j=a.UpdateInputs()
-        #print(j)
+        a.UpdateInputs()
