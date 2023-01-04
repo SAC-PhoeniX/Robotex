@@ -1,0 +1,24 @@
+Roboteks yarışmasında kullanacağımız malzemelerin boutları ve ağırlıkları
+
+Rasbperry Pi 3
+-Boyut :9x6cm, 2cm yükseklik
+-Ağırlık: 41gram
+
+3x HC-SRO4
+-Boyut:4.5x2cm, ~1.5 cm yükseklik
+-Ağırlık:9gram
+
+Powerbank(Kablolar ile birlikte)
+-Boyut: 10x6.75, 2cm yükseklik Yalnız bir tarafındaki USB çıkışları için yaklaşık 2.5 ila 3.5 santim boşluk lazım
+-Ağıtlık:213 gram 
+
+Motor
+-Boyut: 5.5+1(ucu) x 2.5 cm yükseklik ~3.25 cm
+-Ağırlık: 100 gram
+
+Devreler
+-Kablolar ve resistörler ~20 gram
+Breadboard (opsiyonel)
+-Boyut:16.5x5.5cm
+-Ağırlık 80 GRAM 
+ 
