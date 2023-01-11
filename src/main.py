@@ -1,15 +1,37 @@
 from drive import Drive
-from hrc_test import Sensor
+from sensors import Sensor
 from teleop import Teleop
-import time
+from time import sleep
+
+#TODO Stop Button and Function MUST Be Added
+#TODO Autonomous Mode Will Be Added
+
+#PINS
+"""
+Drive Motor: 
+Steering Motor:
+Sensors - Trig: 7
+Sensors - Echo: 11 13 15
+"""
+
+class Main:
+    def __init__(self) -> None:
+        self.Drive = Drive([1, 2, 3], 4, 5, 6)
+        self.sensors = Sensor(7,11,13,15)
+        self.teleop_ = Teleop()
+
+        self.distance = None
+
+    def stop(self):
+        quit()
+
+    def start(self):
+        pass
+
+    def teleop(self):
+        pass
+
 
 if __name__ == "__main__":
-    temp=""
-    Controller=Teleop()
-    # Change pin numbers before running
-    #drive = Drive([1, 2, 3], 4, 5, 6)
-    print("Pins are set up correctly...")
-    sensor = Sensor(7,11,13,15)
-    sensor.st()
-
-
+    main = Main()
+    main.start()

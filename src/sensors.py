@@ -2,8 +2,9 @@ from RPi.GPIO import setmode, BOARD, setup, output, input, cleanup, IN, OUT
 from time import time, sleep
 from threading import Thread
 
+#Nicely Done. Well Done! - Berk
 class Sensor:
-    def __init__(self, trig_pin, echo1, echo2, echo3, sleep_time) -> None:
+    def __init__(self, trig_pin = 7, echo1 = 11, echo2 = 13, echo3 = 15, sleep_time = 0.1) -> None:
         self.trigPIN = trig_pin
         self.echo1 = echo1
         self.echo2 = echo2
@@ -88,18 +89,18 @@ class Sensor:
         self.y.start()
         self.z.start()
 
-
-
-
-
     def distance(self):
+        with open("/logs/SENSOR.log", "a") as f:
+            f.write(str(self.echo1variable) + " | " + str(self.echo2variable) + " | " + str(self.echo3variable) + " on " + str(time()))
+
         return {"sensor_1": self.echo1variable, "sensor_2": self.echo2variable, "sensor_3": self.echo3variable}
 
 
-x = Sensor(7,11,13,15, sleep_time= 0.1)
-for i in range(10):
-    print(x.distance())
-    sleep(0.1)#sleep olmazsa None döndürüyor
+if __name__ == "__main__":
+    x = Sensor(7,11,13,15, sleep_time= 0.1)
+    for i in range(10):
+        print(x.distance())
+        sleep(0.1)#sleep olmazsa None döndürüyor
 
-cleanup()
+    cleanup()
 
