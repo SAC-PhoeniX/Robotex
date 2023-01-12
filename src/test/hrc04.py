@@ -69,7 +69,7 @@ class Sensor:
             pulse3_end = time()"""
 
 
-        return [pu]
+        #return [pu]
 
 if __name__=="__main__":
     Sensors=Sensor(7,11,13,15)#7 trigger, 11,13,15 are from right to left (if faced towards the viewpoint of the sensors(11 has green output cable))

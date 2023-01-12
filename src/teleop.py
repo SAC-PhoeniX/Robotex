@@ -1,11 +1,11 @@
 # import sacrace
-from pandas import read_csv
+#from pandas import read_csv
 from evdev import InputDevice, categorize, ecodes, KeyEvent
 #from drive import Drive
 import glob
 import os
-from drive import Drive
-from sensors import Sensor
+#from drive import Drive
+#from sensors import Sensor
 
 
 class Teleop:
@@ -36,7 +36,7 @@ class Teleop:
         self.events_dir = "/dev/input/"
 
         # IN case of a change in pins, a change in this line is needed
-        self.Sensor = Sensor(7,11,13,15, sleep_time= 0.1)
+        #self.Sensor = Sensor(7,11,13,15, sleep_time= 0.1)
 
         self.ConnectDevice()
 
@@ -65,11 +65,11 @@ class Teleop:
                     self.x=x
 
                 # -10 < y < 10
-                if -10 < y and y < 10:
-                    self.y=y
-                if -10 < x and x < 10:
-                    x = 0#y=0 
-                    self.x=x
+                # if -10 < y and y < 10:
+                #     self.y=y
+                # if -10 < x and x < 10:
+                #     x = 0#y=0 
+                #     self.x=x
         
         self.data.append([self.x,self.y])
         return {"angle":self.x,"speed":self.y}
@@ -115,4 +115,4 @@ if __name__=="__main__":
     while True:
         a.UpdateInputs()
     
-    a.data.to_csv("data1.csv")
+    #a.data.to_csv("data1.csv")

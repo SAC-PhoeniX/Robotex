@@ -9,6 +9,7 @@ class Sensor:
         self.echo1 = echo1
         self.echo2 = echo2
         self.echo3 = echo3
+        
 
         self.echo1variable = None
         self.echo2variable = None
@@ -25,13 +26,12 @@ class Sensor:
         self.start()
 
     def distance1(self, echopin, empty):
-        
         while True:
             try:
                 output(self.trigPIN, True)
                 sleep(0.00001)
                 output(self.trigPIN, False)
-
+                
                 while input(echopin) == 0:
                     pulse1_start = time()
                 
@@ -41,6 +41,7 @@ class Sensor:
                 self.echo1variable = (pulse1_end- pulse1_start) * 17150
                 sleep(self.sleep_time)
             except:
+                
                 continue
 
     def distance2(self, echopin, empty):
@@ -60,6 +61,7 @@ class Sensor:
                 
                 self.echo2variable = (pulse1_end- pulse1_start) * 17150
                 sleep(self.sleep_time)
+                
             except:
                 continue
 
@@ -90,14 +92,18 @@ class Sensor:
         self.z.start()
 
     def distance(self):
-        with open("/logs/SENSOR.log", "a") as f:
-            f.write(str(self.echo1variable) + " | " + str(self.echo2variable) + " | " + str(self.echo3variable) + " on " + str(time()))
+        # with open("./Robotex/src/logs/SENSOR.log", "a") as f:
+        #     f.write(str(self.echo1variable) + " | " + str(self.echo2variable) + " | " + str(self.echo3variable) + " on " + str(time()))
 
         return {"sensor_1": self.echo1variable, "sensor_2": self.echo2variable, "sensor_3": self.echo3variable}
 
 
 if __name__ == "__main__":
     x = Sensor(7,11,13,15, sleep_time= 0.1)
+
+    
+
+
     for i in range(10):
         print(x.distance())
         sleep(0.1)#sleep olmazsa None döndürüyor
