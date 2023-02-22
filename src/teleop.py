@@ -114,5 +114,6 @@ if __name__=="__main__":
     a=Teleop()
     while True:
         a.UpdateInputs()
+        print(a)
     
     #a.data.to_csv("data1.csv")
