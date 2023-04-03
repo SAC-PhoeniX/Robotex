@@ -2,8 +2,8 @@ const int trigPin1 = 2;
 const int echoPin1 = 3;
 const int trigPin2 = 11;
 const int echoPin2 = 12;
-const int minDistance = 15;
-const int delaybetweenturns = 300; 
+const int minDistance = 12;
+const int delaybetweenturns = 210; 
 
 //Sensor 1 right
 //Sensor 2 Mid
@@ -47,7 +47,7 @@ void getsensordata() {
   delayMicroseconds(10);
   digitalWrite(trigPin1, LOW);
   // Reads the echoPin, returns the sound wave travel time in microseconds
-  duration = pulseIn(echoPin1, HIGH);
+  duration = pulseIn(echoPin1, HIGH, 100000); //The Third Param Allows us to limit the time waited for each sensor, we dont want to mresure a target 2000 meters away 
   // Calculating the distance
   distance = duration * 0.034 / 2;
   // Prints the distance on the Serial Monitor
@@ -63,7 +63,7 @@ void getsensordata() {
   delayMicroseconds(10);
   digitalWrite(trigPin2, LOW);
   // Reads the echoPin, returns the sound wave travel time in microseconds
-  duration = pulseIn(echoPin2, HIGH);
+  duration = pulseIn(echoPin2, HIGH,100000);
   // Calculating the distance
   distance = duration * 0.034 / 2;
   // Prints the distance on the Serial Monitor
@@ -79,7 +79,7 @@ void getsensordata() {
   delayMicroseconds(10);
   digitalWrite(trigPin3, LOW);
   // Reads the echoPin, returns the sound wave travel time in microseconds
-  duration = pulseIn(echoPin3, HIGH);
+  duration = pulseIn(echoPin3, HIGH,100000);
   // Calculating the distance
   distance = duration * 0.034 / 2;
   // Prints the distance on the Serial Monitor
@@ -106,7 +106,7 @@ void foward() {
   digitalWrite(5, HIGH);
   digitalWrite(6, HIGH);
   digitalWrite(7, LOW);
-  setmotorvels(241, 241);
+  setmotorvels(246, 241);
   state = 'f';
   Serial.println("foward");
 }
@@ -180,7 +180,7 @@ void loop() {
 
   if ((distances[0] <= minDistance) && (distances[0]!=0)) {
     if (distances[1] < minDistance ){
-        turnleft(distances[1] - distances[0]);
+        turnleft(distances[2] - distances[0]);
       }
     else {
       turnleft((distances[2] - distances[1]));
@@ -192,17 +192,23 @@ void loop() {
     else {
       turnright((distances[1] - distances[2] ));
     }
-  } else if (distances[1] < minDistance && distances[1]!=0) {
+  } else if (distances[1] < minDistance+3 && distances[1]!=0) {
     //backward
     backward();
     delay(500);
     foward();
-    turnleft(30);
+    delay(100);
+
+    if(distances[0]<distances[2]){
+        turnleft(100);
+    }else{
+      turnright(100);
+    }
+ 
+
   }
-  foward();
-  ctr2 = millis();
-  ctr3=ctr2-ctr;
-  if (ctr3<500){
-    delay(500-ctr3);
+  else{
+      foward();
   }
+
 }
