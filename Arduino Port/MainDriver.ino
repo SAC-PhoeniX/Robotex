@@ -2,13 +2,22 @@ const int trigPin1 = 2;
 const int echoPin1 = 3;
 const int trigPin2 = 11;
 const int echoPin2 = 12;
-const int minDistance = 12;
-const int delaybetweenturns = 210; 
+
+
+
+const int minDistance = 10;
+const int delaybetweenturns = 100; 
+const int increase = 0;//sol mototru 
 
 //Sensor 1 right
 //Sensor 2 Mid
 //Sensor3 left
 
+
+
+//sag pin 10 sol pin 9 
+char firstdir='\0';
+int backctr{};
 
 
 bool mswitch{};
@@ -20,6 +29,8 @@ const int echoPin3 = 19;
 unsigned long duration;
 int distance;
 int distances[3];
+char history[5];
+
 
 long ctr;
 long ctr2;
@@ -32,7 +43,7 @@ int calcdif(int leftspeed) {
   // int rightspeed{};
   // int dif[];
   //241,246
-  const int increase = -5;
+
   return leftspeed + increase < 255 ? leftspeed + increase : 255;
 }
 
@@ -121,8 +132,8 @@ void backward() {
   Serial.println("backward");
 }
 
-void turnleft(int dif) {
-  setmotorvels(241, 0, true);
+void turnleft(int dif) { 
+  setmotorvels(210, 0, true);
   //Serial.println((700 - (dif * 50)>0));
   delay(delaybetweenturns);
   foward();
@@ -130,7 +141,7 @@ void turnleft(int dif) {
 }
 
 void turnright(int dif) {
-  setmotorvels(0, 246, true);
+  setmotorvels(0, 215, true);
   Serial.println((700 - (dif * 50)>0));
   delay(delaybetweenturns);
   foward();
@@ -179,6 +190,8 @@ void loop() {
   //handles the turn logic
 
   if ((distances[0] <= minDistance) && (distances[0]!=0)) {
+    backctr=0;
+
     if (distances[1] < minDistance ){
         turnleft(distances[2] - distances[0]);
       }
@@ -186,6 +199,7 @@ void loop() {
       turnleft((distances[2] - distances[1]));
     }
   } else if ((distances[2] <= minDistance )&& (distances[2]!=0)) {
+    backctr=0;
     if (distances[2]< minDistance){
         turnright(distances[1] - distances[2]);
       }
@@ -193,17 +207,38 @@ void loop() {
       turnright((distances[1] - distances[2] ));
     }
   } else if (distances[1] < minDistance+3 && distances[1]!=0) {
+
     //backward
+    backctr++;
     backward();
     delay(500);
     foward();
     delay(100);
 
+    
+
     if(distances[0]<distances[2]){
+        if (backctr==1){
+          firstdir='l';
+        }
         turnleft(100);
-    }else{
+    }else if(distances[0]>distances[2]){
       turnright(100);
+        if (backctr==1){
+          firstdir='r';
+        }
+
     }
+
+    if (backctr>=5){
+      if(firstdir=='r'){
+        turnright(100);
+      }else{
+        turnleft(100);
+      }
+
+    }
+
  
 
   }
